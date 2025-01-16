@@ -1,23 +1,15 @@
 # Import the Flask class from the flask module
 from flask import Flask
+from api import api_bp
 
 # Create an instance of the Flask class
 # The first argument is the name of the application's module or package
 app = Flask(__name__)
 
+app.register_blueprint(api_bp)
+
 #######################################
 #             FRONT END               #
-#######################################
-
-# Define a route for the root URL ("/")
-@app.route('/')
-def home():
-    # This function will be called when the root URL is accessed
-    return "Welcome to the basic Flask application!"
-
-
-#######################################
-#                API                  #
 #######################################
 
 # Define a route for the root URL ("/")
