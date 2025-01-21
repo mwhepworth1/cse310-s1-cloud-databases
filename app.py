@@ -1,5 +1,5 @@
 # Import the Flask class from the flask module
-from flask import Flask
+from flask import Flask, render_template
 from api import api_bp
 
 # Create an instance of the Flask class
@@ -15,8 +15,10 @@ app.register_blueprint(api_bp)
 # Define a route for the root URL ("/")
 @app.route('/')
 def home():
-    # This function will be called when the root URL is accessed
-    return "Welcome to the basic Flask application!"
+    # List of items to display
+    items = ["Item 1", "Item 2", "Item 3", "Item 4"]
+    # Render the template and pass the list of items
+    return render_template('index.html', items=items)
 
 # Check if the executed file is the main program and run the app
 if __name__ == '__main__':
