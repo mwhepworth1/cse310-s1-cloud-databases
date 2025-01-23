@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>To-Do List</title>
+    <meta name="description" content="A simple to-do list application to manage your tasks.">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="loginpage.html" class="nav-link">Login</a>
+            <a href="registerpage.html" class="nav-link">Register</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <form action="/add_todo" method="post">
+            <input type="text" name="task" placeholder="Enter a new task" required>
+            <button type="submit">+</button>
+        </form>
+        <ul>
+            <!-- Task items will be dynamically inserted here -->
+        </ul>
+    </div>
+</body>
+</html>
