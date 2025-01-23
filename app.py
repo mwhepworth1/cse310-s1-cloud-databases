@@ -4,7 +4,7 @@ from api import api_bp
 
 # Create an instance of the Flask class
 # The first argument is the name of the application's module or package
-app = Flask(__name__)
+app = Flask(__name__, static_folder="assets")
 app.register_blueprint(api_bp)
 
 #######################################
