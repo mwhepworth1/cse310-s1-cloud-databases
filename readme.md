@@ -36,12 +36,12 @@ Group Text
 
 |Responsibility                      |Team Member(s)              |
 |------------------------------------|----------------------------|
-|Conducting Meetings                 |                            |
-|Maintaining Team Assignment List    |                            |
-|Ensuring GitHub is Working          |                            |
-|Maintaining Documentation           |                            |
-|Create & Display Presentations      |                            |
-|Submit Team Assignments             |                            |
+|Conducting Meetings                 |   Matthew Hepworth         |
+|Maintaining Team Assignment List    |   Karina Winn              |
+|Ensuring GitHub is Working          |   Matthew Hepworth         |
+|Maintaining Documentation           |   Karina Winn              |
+|Create & Display Presentations      |   Brendan Willis           |
+|Submit Team Assignments             |   Brendan Willis           |
 
 ## Reflections
 
