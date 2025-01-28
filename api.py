@@ -1,18 +1,44 @@
 from flask import Blueprint, request, jsonify
+from utils.db import create_connection
+from mysql.connector import Error
 
-api_bp = Blueprint('api', __name__) # Acts as a /api prefix for all the below routes.
+api_bp = Blueprint('api', __name__, url_prefix='/api') # Acts as a /api prefix for all the below routes.
 
 @api_bp.route('/list/create', methods=['POST'])
 def create_list():
+    db_connection = create_connection() # Create a connection to the database
+
     data = request.get_json()  # Get the JSON data from the request
-    required_keys = ["user_id", "list_id", "name", "description", "items"]
+    required_keys = ["user_id", "name"]
     for key in required_keys:
         if key not in data:
             return jsonify({"error": f"Missing required key: {key}"}), 400 # Bad Request
         
-    # Modify database here
+    '''
+    Database Notes:
+        - Cursor: An object that allows for query execution and data retrieval.
+        - db_connection.commit(): Commits the changes to the database. 
+        - This is a transactional operation, meaning that it will only commit if all operations are successful.
+        - db_connection.close(): Closes the connection to the database.
+    '''
+    if db_connection:
+        cursor = db_connection.cursor()
+        try:
+            query = "INSERT INTO lists (user_id, list_name) VALUES (%s, %s)"
+            values = [data["user_id"], data["name"]]
+            cursor.execute(query, values) # Actual query execution
+            db_connection.commit() # Commit the changes
 
-    return jsonify({"message": "Data received", "data": data}), 200 # OK
+            list_id = cursor.lastrowid # Get the ID of the newly created list
+            return jsonify({"message": "List successfully created.", "data": list_id}), 200
+        except Error as e:
+            print(f"An unexpected error ocurred: '{e}'")
+            return jsonify({"error": f"An unexpected error ocurred: '{e}'"}), 500
+        finally:
+            cursor.close()
+            db_connection.close() # close the connection
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 400
 
 @api_bp.route('/list/update', methods=['PUT'])
 def update_list():
