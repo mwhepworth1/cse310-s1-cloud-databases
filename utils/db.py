@@ -20,3 +20,4 @@ def create_connection():
         print(f"The error '{e}' occurred")
 
     return connection
+

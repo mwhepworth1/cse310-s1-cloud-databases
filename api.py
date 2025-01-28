@@ -38,19 +38,34 @@ def create_list():
             cursor.close()
             db_connection.close() # close the connection
     else:
-        return jsonify({"error": "Could not establish connection to database"}), 400
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
 @api_bp.route('/list/update', methods=['PUT'])
 def update_list():
+    db_connection = create_connection()
     data = request.get_json()
-    required_keys = ["user_id", "list_id", "name", "description", "items"]
+    required_keys = ["user_id", "list_id", "name"]
     for key in required_keys:
         if key not in data:
             return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
+    if db_connection:
+        cursor = db_connection.cursor()
+        try:
+            query = "UPDATE lists SET list_name = %s WHERE user_id = %s AND lists_id = %s"
+            values = [data["name"], data["user_id"], data["list_id"]]
+            cursor.execute(query, values)
+            db_connection.commit()
 
-    return jsonify({"message": "Data received", "data": data}), 200
+            return jsonify({"message": "List successfully updated.", "data": data}), 200
+        except Error as e:
+            print(f"An unexpected error ocurred: '{e}'")
+            return jsonify({"error": f"An unexpected error ocurred: '{e}'"}), 500
+        finally:
+            cursor.close()
+            db_connection.close()
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
 @api_bp.route('/list/delete', methods=['DELETE'])
 def delete_list():
