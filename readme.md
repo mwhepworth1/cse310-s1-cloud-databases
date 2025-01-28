@@ -15,6 +15,7 @@ PostgreSQL
 Bootstrap (CSS & JS) for frontend
 Visual Studio Code
 GitHub Repo & Project Boards
+python-dotenv
 
 
 ## Core Software Features
