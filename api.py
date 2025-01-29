@@ -10,11 +10,10 @@ db = Database()
 def create_list():
 
     if db.connect():
-        data = request.get_json()  # Get the JSON data from the request
+        data = request.get_json() 
         required_keys = ["user_id", "name"]
         for key in required_keys:
             if key not in data:
-                # Bad Request
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try:
@@ -34,109 +33,196 @@ def create_list():
 
 @api_bp.route('/list/update', methods=['PUT'])
 def update_list():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id", "name"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["user_id", "list_id", "name"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    if db_connection:
-        cursor = db_connection.cursor()
         try:
             query = "UPDATE lists SET list_name = %s WHERE user_id = %s AND lists_id = %s"
             values = [data["name"], data["user_id"], data["list_id"]]
-            cursor.execute(query, values)
-            db_connection.commit()
-
-            return jsonify({"message": "List successfully updated.", "data": data}), 200
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "List successfully updated.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
-            print(f"An unexpected error ocurred: '{e}'")
-            return jsonify({"error": f"An unexpected error ocurred: '{e}'"}), 500
-        finally:
-            cursor.close()
-            db_connection.close()
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
 
+    
+
 @api_bp.route('/list/delete', methods=['DELETE'])
 def delete_list():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["user_id", "list_id"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
-
-    return jsonify({"message": "Data received", "data": data}), 200
+        try:
+            query = "DELETE FROM lists WHERE user_id = %s AND lists_id = %s"
+            values = [data["user_id"], data["list_id"]]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "List successfully deleted.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
 @api_bp.route('/list/get', methods=['GET'])
 def get_list():
-    user_id = request.args.get('user_id')
-    list_id = request.args.get('list_id')
-    if not user_id or not list_id:
-        return jsonify({"error": "Missing required query parameter: user_id or list_id"}), 400
-        
-    # Query database here
+    if db.connect():
+        user_id = request.args.get('user_id')
+        list_id = request.args.get('list_id')
+        if not user_id or not list_id:
+            return jsonify({"error": "Missing required query parameter: user_id or list_id"}), 400
+    
+        try:
+            query = "SELECT * FROM lists WHERE user_id = %s AND lists_id = %s"
+            values = [user_id, list_id]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "List successfully retrieved.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
-    return jsonify({"message": "Data received", "user_id": user_id, "list_id": list_id}), 200
 
-@api_bp.route('/list/elements/create', methods=['POST'])
+@api_bp.route('/list/tasks/create', methods=['POST'])
 def create_element():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id", "element_id", "element"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["list_id", "title", "description", "description"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
+        try:
+            query = "INSERT INTO tasks (list_id, title, description, is_done) VALUES (%s, %s, %s, %s)"
+            values = [data["list_id"], data["title"], data["description"], False]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "Element successfully created.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
-    return jsonify({"message": "Data received", "data": data}), 200
 
-@api_bp.route('/list/elements/update', methods=['PUT'])
+@api_bp.route('/list/tasks/update', methods=['PUT'])
 def update_element():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id", "element_id", "element"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["list_id", "title", "description"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
+        try:
+            query = "UPDATE tasks SET title = %s, description = %s WHERE list_id = %s AND tasks_id = %s"
+            values = [data["title"], data["description"], data["list_id"], data["task_id"]]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "Element successfully updated.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
-    return jsonify({"message": "Data received", "data": data}), 200
-
-@api_bp.route('/list/elements/delete', methods=['DELETE'])
+@api_bp.route('/list/tasks/delete', methods=['DELETE'])
 def delete_element():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id", "element_id"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["task_id"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
+        try:
+            query = "DELETE FROM tasks WHERE tasks_id = %s"
+            values = [data["task_id"]]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "Task successfully deleted.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
-    return jsonify({"message": "Data received", "data": data}), 200
-
-@api_bp.route('/list/elements/get', methods=['GET'])
+@api_bp.route('/list/tasks/get', methods=['GET'])
 def get_element():
-    user_id = request.args.get('user_id')
-    list_id = request.args.get('list_id')
-    element_id = request.args.get('element_id')
-    if not user_id or not list_id or not element_id:
-        return jsonify({"error": "Missing required query parameter: user_id, list_id, or element_id"}), 400
+    if db.connect():
+        user_id = request.args.get('user_id')
+        list_id = request.args.get('list_id')
+        task_id = request.args.get('task_id')
+        if not user_id or not list_id or not task_id:
+            return jsonify({"error": "Missing required query parameter: user_id, list_id, or element_id"}), 400
         
-    # Query database here
+        try:
+            query = "SELECT * FROM tasks WHERE user_id = %s AND list_id = %s AND tasks_id = %s"
+            values = [user_id, list_id, task_id]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "Task successfully retrieved.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
 
-    return jsonify({"message": "Data received", "user_id": user_id, "list_id": list_id, "element_id": element_id}), 200
-
-@api_bp.route('/list/elements/toggle', methods=['PUT'])
+@api_bp.route('/list/tasks/toggle', methods=['PUT'])
 def toggle_element():
-    data = request.get_json()
-    required_keys = ["user_id", "list_id", "element_id"]
-    for key in required_keys:
-        if key not in data:
-            return jsonify({"error": f"Missing required key: {key}"}), 400
+    if db.connect():
+        data = request.get_json()
+        required_keys = ["user_id", "list_id", "element_id"]
+        for key in required_keys:
+            if key not in data:
+                return jsonify({"error": f"Missing required key: {key}"}), 400
         
-    # Modify database here
-
-    return jsonify({"message": "Data received", "data": data}), 200
+        try: 
+            # SET is_done = NOT is_done is the same as "is_done = not is_done" or "is_done = !is_done".
+            query = "UPDATE tasks SET is_done = NOT is_done WHERE user_id = %s AND list_id = %s AND tasks_id = %s"
+            values = [data["user_id"], data["list_id"], data["element_id"]]
+            result = db.query(query, values)
+            db.close()
+            if result:
+                return jsonify({"message": "Task successfully toggled.", "data": result}), 200
+            else:
+                return jsonify({"error": "An unexpected error occurred"}), 500
+        except Error as e:
+            print(f"An unexpected error occurred: '{e}'")
+            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+    else:
+        return jsonify({"error": "Could not establish connection to database"}), 500
