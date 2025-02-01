@@ -6,6 +6,63 @@
     <link rel="stylesheet" href="/assets/css/styles.css">
     <title>To-Do List</title>
     <meta name="description" content="A simple to-do list application to manage your tasks.">
+    <style>
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .modal-body {
+            margin-top: 20px;
+        }
+
+        .modal-footer {
+            text-align: right; /* Right align the buttons */
+            margin-top: 20px;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            height: 40px;
+            margin-left: 10px; /* Add space between buttons */
+        }
+        .modal-footer .create-btn {
+            background-color: #006D77;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -35,10 +92,46 @@
         <p>A CSE 310 Project By: Aaron Heiner, Karina Winn, Brendan Willis, and Matthew Hepworth</p>
     </footer>
 
+    <!-- The Modal -->
+    <div id="addListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New List</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="list-name">List Name:</label>
+                <input type="text" id="list-name" name="list-name" required>
+            </div>
+            <div class="modal-footer">
+                <button class="create-btn">Create</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('add-list-card').addEventListener('click', async function () {
+        const modal = document.getElementById("addListModal");
+        const addListCardElement = document.getElementById("add-list-card");
+        const closeModal = document.getElementsByClassName("close")[0];
+        const createBtn = document.getElementsByClassName("create-btn")[0];
+
+        addListCardElement.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        closeModal.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        createBtn.onclick = async function() {
             const userId = document.getElementById('user-id').value;
-            const listName = prompt("Enter a new list name:");
+            const listName = document.getElementById('list-name').value;
             if (listName) {
                 const data = { user_id: userId, name: listName };
                 const response = await fetch('/api/list/create', {
@@ -50,12 +143,12 @@
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    addListCard(result.data);
+                    window.location.href = `/list/${result.data[0].lists_id}`;
                 } else {
                     alert(result.error);
                 }
             }
-        });
+        }
 
         document.getElementById('search-input').addEventListener('input', function () {
             const searchValue = this.value.toLowerCase();
