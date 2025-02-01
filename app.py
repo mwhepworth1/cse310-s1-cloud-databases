@@ -21,7 +21,8 @@ todo_items = []
 # Define a route for the root URL ("/")
 @app.route('/')
 def home():
-    return render_template('index.html', items=todo_items)
+    user_id = 1 
+    return render_template('index.html', items=todo_items, user_id=user_id)
 
 # Define a route to add new to-do items
 @app.route('/add', methods=['POST'])

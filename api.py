@@ -20,24 +20,38 @@ def create_list():
     Example: {"message": "List successfully created.", "data": {...}}
     """
     if db.connect():
-        data = request.get_json() 
-        required_keys = ["user_id", "name"]
-        for key in required_keys:
-            if key not in data:
-                return jsonify({"error": f"Missing required key: {key}"}), 400
-        
-        try:
-            query = "INSERT INTO lists (user_id, list_name) VALUES (%s, %s)"
-            values = [data["user_id"], data["name"]]
-            result = db.query(query, values)
-            db.close()
-            if result:
-                return jsonify({"message": "List successfully created.", "data": result}), 200
-            else:
-                return jsonify({"error": "An unexpected error occurred"}), 500
-        except Error as e:
-            print(f"An unexpected error occurred: '{e}'")
-            return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+        if request.is_json:
+            data = request.get_json()
+            required_keys = ["user_id", "name"]
+            for key in required_keys:
+                if key not in data:
+                    # Bad Request
+                    return jsonify({"error": f"Missing required key: {key}"}), 400
+
+            try:
+                # Insert the new list and get the last inserted ID
+                query = "INSERT INTO lists (user_id, list_name) VALUES (%s, %s)"
+                values = [data["user_id"], data["name"]]
+                result = db.query(query, values)
+
+                if result:
+                    # Fetch the inserted row's details using LAST_INSERT_ID()
+                    query = "SELECT * FROM lists WHERE lists_id = LAST_INSERT_ID()"
+                    response = db.query(query)
+
+                    if response:
+                        return jsonify({"message": "List successfully created.", "data": response}), 200
+                    else:
+                        return jsonify({"error": "Failed to fetch the created list."}), 500
+                else:
+                    return jsonify({"error": "Failed to create list."}), 500
+            except Error as e:
+                print(f"An unexpected error occurred: '{e}'")
+                return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
+            finally:
+                db.close()
+        else:
+            return jsonify({"error": "Unsupported Media Type. Content-Type must be application/json."}), 415
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
 
@@ -130,16 +144,21 @@ def get_list():
     if db.connect():
         user_id = request.args.get('user_id')
         list_id = request.args.get('list_id')
-        if not user_id or not list_id:
-            return jsonify({"error": "Missing required query parameter: user_id or list_id"}), 400
-    
+        if not user_id:
+            return jsonify({"error": "Missing required query parameter: user_id"}), 400
+
         try:
-            query = "SELECT * FROM lists WHERE user_id = %s AND lists_id = %s"
-            values = [user_id, list_id]
+            if list_id:
+                query = "SELECT * FROM lists WHERE user_id = %s AND lists_id = %s"
+                values = [user_id, list_id]
+            else:
+                query = "SELECT * FROM lists WHERE user_id = %s"
+                values = [user_id]
+            
             result = db.query(query, values)
             db.close()
             if result:
-                return jsonify({"message": "List successfully retrieved.", "data": result}), 200
+                return jsonify({"message": "List(s) successfully retrieved.", "data": result}), 200
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:

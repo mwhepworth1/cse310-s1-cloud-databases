@@ -15,17 +15,70 @@
         </nav>
     </header>
     <div class="container">
-        <h1>To-Do List</h1>
-        <form action="/add_todo" method="post">
-            <input type="text" name="task" placeholder="Enter a new task" required>
-            <button type="submit">+</button>
+        <h1>To-Do List App</h1>
+        <input type="hidden" id="user-id" value="{{ user_id }}">
+        <form id="search-form">
+            <input type="text" id="search-input" placeholder="Enter a list name" required>
+            <button type="submit">+ New</button>
         </form>
-        <ul>
-            <!-- Task items will be dynamically inserted here -->
-        </ul>
+        <div id="todo-lists" class="list-container">
+            <!-- List cards will be dynamically inserted here -->
+        </div>
     </div>
     <footer>
         <p>A CSE 310 Project By: Aaron Heiner, Karina Winn, Brendan Willis, and Matthew Hepworth</p>
     </footer>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const userId = document.getElementById('user-id').value;
+            const listName = document.getElementById('search-input').value;
+            const data = { user_id: userId, name: listName };
+            const response = await fetch('/api/list/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                addListCard(result.data);
+            } else {
+                alert(result.error);
+            }
+        });
+
+        function addListCard(list) {
+            const container = document.getElementById('todo-lists');
+            const card = document.createElement('div');
+            card.className = 'list-card';
+            card.setAttribute('data-user-id', list.user_id);
+            card.setAttribute('data-list-id', list.list_id);
+            card.innerHTML = `
+                <h2>${list.name}</h2>
+                <p>${list.description}</p>
+            `;
+            card.addEventListener('click', function () {
+                window.location.href = `/list/${list.list_id}`;
+            });
+            container.appendChild(card);
+        }
+
+        // Fetch and display existing lists on page load
+        async function fetchLists() {
+            const userId = document.getElementById('user-id').value;
+            const response = await fetch(`/api/list/get?user_id=${userId}`);
+            const result = await response.json();
+            if (response.ok) {
+                result.data.forEach(addListCard);
+            } else {
+                alert(result.error);
+            }
+        }
+
+        fetchLists();
+    </script>
 </body>
-</html
+</html>
