@@ -24,6 +24,9 @@ def home():
     user_id = 1 
     return render_template('index.html', items=todo_items, user_id=user_id)
 
+@app.route('/list/<int:list_id>')
+def list(list_id):
+    return render_template('list.html', list_id=list_id)
 # Define a route to add new to-do items
 @app.route('/add', methods=['POST'])
 def add_item():
