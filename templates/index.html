@@ -9,19 +9,25 @@
 </head>
 <body>
     <header>
-        <nav>
+        <div class="header-left">
+            <h1>To-Do List App</h1>
+        </div>
+        <nav class="header-right">
             <a href="/loginpage" class="nav-link">Login</a>
             <a href="/registerpage" class="nav-link">Register</a>
         </nav>
     </header>
-    <div class="container">
-        <h1>To-Do List App</h1>
-        <input type="hidden" id="user-id" value="{{ user_id }}">
+    <div class="search-container">
         <form id="search-form">
-            <input type="text" id="search-input" placeholder="Enter a list name" required>
-            <button type="submit">+ New</button>
+            <input type="text" id="search-input" placeholder="Search for a list" required>
         </form>
+    </div>
+    <div class="container">
+        <input type="hidden" id="user-id" value="{{ user_id }}">
         <div id="todo-lists" class="list-container">
+            <div class="list-card add-card" id="add-list-card">
+                <button id="add-list-button">+</button>
+            </div>
             <!-- List cards will be dynamically inserted here -->
         </div>
     </div>
@@ -30,24 +36,38 @@
     </footer>
 
     <script>
-        document.getElementById('search-form').addEventListener('submit', async function (event) {
-            event.preventDefault();
+        document.getElementById('add-list-card').addEventListener('click', async function () {
             const userId = document.getElementById('user-id').value;
-            const listName = document.getElementById('search-input').value;
-            const data = { user_id: userId, name: listName };
-            const response = await fetch('/api/list/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            if (response.ok) {
-                addListCard(result.data);
-            } else {
-                alert(result.error);
+            const listName = prompt("Enter a new list name:");
+            if (listName) {
+                const data = { user_id: userId, name: listName };
+                const response = await fetch('/api/list/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    addListCard(result.data);
+                } else {
+                    alert(result.error);
+                }
             }
+        });
+
+        document.getElementById('search-input').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.list-card:not(.add-card)');
+            cards.forEach(card => {
+                const listName = card.querySelector('h2').textContent.toLowerCase();
+                if (listName.includes(searchValue)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
 
         function addListCard(list) {
@@ -55,13 +75,12 @@
             const card = document.createElement('div');
             card.className = 'list-card';
             card.setAttribute('data-user-id', list.user_id);
-            card.setAttribute('data-list-id', list.list_id);
+            card.setAttribute('data-list-id', list.lists_id);
             card.innerHTML = `
-                <h2>${list.name}</h2>
-                <p>${list.description}</p>
+                <h2>${list.list_name}</h2>
             `;
             card.addEventListener('click', function () {
-                window.location.href = `/list/${list.list_id}`;
+                window.location.href = `/list/${list.lists_id}`;
             });
             container.appendChild(card);
         }
@@ -79,6 +98,15 @@
         }
 
         fetchLists();
+
+        // Add scroll event listener to toggle the 'scrolled' class
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 0) {
+                document.body.classList.add('scrolled');
+            } else {
+                document.body.classList.remove('scrolled');
+            }
+        });
     </script>
 </body>
 </html>

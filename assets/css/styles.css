@@ -1,4 +1,4 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -13,16 +13,16 @@ body {
     background-color: #EDF6F9;
     background-image: url('image.png');
     background-repeat: repeat;
-    background-size: 500px 500px; /* Adjust the size as needed */
+    background-size: 500px 500px; 
     background-blend-mode: overlay;
     background-color: rgba(253, 253, 253, 0.967);
     margin: 0;
     padding: 0;
     display: grid;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    grid-template-columns: 1fr minmax(auto, 900px) 1fr; /* Create margins */
+    grid-template-rows: auto auto 1fr auto; /* Header, search bar, content, and footer */
     height: 100vh;
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 h1 {
@@ -30,25 +30,25 @@ h1 {
 }
 
 .container {
+    grid-column: 2 / 3; /* Center the container */
     background-color: #FFF;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 640px; /* 4/3 ratio, smaller size */
-    height: 480px; /* 4/3 ratio, smaller size */
+    width: 100%;
+    max-width: 1200px;
     text-align: center;
     position: relative;
+    overflow: auto; 
+    height: auto; /* Adjust height to fit content */
 }
 
 form {
     margin-bottom: 20px;
     position: relative;
-    height:475px ;
     width: 100%;
     align-items: center;
-   
-    justify-content: center
-
+    justify-content: center;
 }
 
 input[type="text"] {
@@ -62,7 +62,7 @@ input[type="text"] {
 button {
     padding: 10px;
     border: none;
-    position: absolute; /* Changed to absolute positioning */
+    position: absolute; 
     background-color: #006D77;
     color: #FFF;
     border-radius: 50%;
@@ -74,11 +74,69 @@ button {
     align-items: center;
     font-size: 16px;
     bottom: 10px;
-    left: 50%; /* Positioned at 50% of the form's width */
-    transform: translateX(-50%); /* Centered horizontally */
+    left: 50%; 
+    transform: translateX(-50%); 
 }
 
 button:hover {
+    background-color: #83C5BE;
+}
+
+.list-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    justify-content: center;
+    align-items: start; 
+}
+
+.list-card {
+    background-color: #FFDDD2;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 150px;
+    height: 225px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.list-card:hover {
+    transform: scale(1.05);
+}
+
+.add-card {
+    background-color: #006D77;
+    color: #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative; 
+    cursor: pointer; 
+}
+
+.add-card button {
+    background-color: #006D77;
+    color: #FFF;
+    border: none;
+    border-radius: 50%;
+    width: var(--button-size);
+    height: var(--button-size);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.add-card button:hover {
     background-color: #83C5BE;
 }
 
@@ -114,61 +172,123 @@ p {
 }
 
 header {
+    grid-column: 1 / -1; /* Span across all columns */
     width: 100%;
     background-color: #006D77;
-    padding: 10px 0;
-    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-nav {
+.header-left h1 {
+    color: #FFF;
+    margin: 0;
+}
+
+.header-right {
     display: flex;
-    justify-content: center;
+    gap: 15px;
 }
 
 nav a {
     color: #FFF;
     text-decoration: none;
-    margin: 0 15px;
 }
 
 nav a:hover {
     text-decoration: underline;
 }
 
+.search-container {
+    grid-column: 1 / -1; /* Span across all columns */
+    padding: 10px 0;
+    text-align: center;
+    position: sticky;
+    top: 60px; /* Adjust based on header height */
+    z-index: 999;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+body.scrolled .search-container {
+    background-color: #FFF; /* White background when scrolled */
+}
+
+.search-container form {
+    display: inline-block;
+    width: 100%;
+    max-width: 600px;
+}
+
+footer {
+    grid-column: 2 / 3; /* Center the footer */
+    text-align: center;
+    padding: 10px;
+    background-color: #FFF;
+    border-top: 1px solid #DDD;
+}
+
+@media (max-width: 1024px) {
+    .list-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .container {
-        width: 90%; /* Adjust container width for smaller screens */
-        height: auto; /* Adjust container height for smaller screens */
+        width: 90%; 
     }
 
     input[type="text"] {
-        width: calc(100% - 22px); /* Adjust input width for smaller screens */
+        width: calc(100% - 22px); 
     }
 
-    button {
-        --button-size: 60px; /* Adjust button size for smaller screens */
+    .list-card {
+        width: 120px;
+        height: 180px; 
+    }
+
+    .add-card button {
+        --button-size: 60px; 
         width: var(--button-size);
         height: var(--button-size);
+    }
+
+    .list-container {
+        grid-template-columns: repeat(3, 1fr); 
     }
 }
 
 @media (max-width: 480px) {
     .container {
-        width: 100%; /* Adjust container width for very small screens */
-        padding: 10px; /* Adjust padding for very small screens */
+        width: 100%; 
+        padding: 10px; 
     }
 
     input[type="text"] {
-        width: calc(100% - 12px); /* Adjust input width for very small screens */
+        width: calc(100% - 12px); 
     }
 
-    button {
-        --button-size: 50px; /* Adjust button size for very small screens */
+    .list-card {
+        width: 90px; 
+        height: 150px;
+    }
+
+    .add-card button {
+        --button-size: 50px; 
         width: var(--button-size);
         height: var(--button-size);
     }
 
     h1 {
-        font-size: 1.5em; /* Adjust heading size for very small screens */
+        font-size: 1.5em;
+    }
+
+    .list-container {
+        grid-template-columns: 1fr;
     }
 }
