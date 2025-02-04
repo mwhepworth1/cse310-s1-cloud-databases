@@ -135,6 +135,36 @@ nav a:hover {
     text-decoration: underline;
 }
 
+/* Style for checked items */
+.task-checkbox:checked + span {
+    text-decoration: line-through;
+    color: gray;
+}
+
+/* Optional: Style checkbox itself */
+.task-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Style for the list */
+ul#checklist {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul#checklist li {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+ul#checklist li span {
+    margin-left: 10px;
+}
+
 @media (max-width: 768px) {
     .container {
         width: 90%; /* Adjust container width for smaller screens */
