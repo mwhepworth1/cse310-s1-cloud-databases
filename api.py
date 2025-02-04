@@ -91,8 +91,6 @@ def update_list():
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
 
-    
-
 @api_bp.route('/list/delete', methods=['DELETE'])
 def delete_list():
     """
@@ -167,7 +165,6 @@ def get_list():
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
 
-
 @api_bp.route('/list/tasks/create', methods=['POST'])
 def create_element():
     """
@@ -203,7 +200,6 @@ def create_element():
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
-
 
 @api_bp.route('/list/tasks/update', methods=['PUT'])
 def update_element():
