@@ -40,11 +40,11 @@ def create_list():
                     response = db.query(query)
 
                     if response:
-                        return jsonify({"message": "List successfully created.", "data": response}), 200
+                        return jsonify({"message": "List successfully created.", "data": response}), 200 # OK
                     else:
-                        return jsonify({"error": "Failed to fetch the created list."}), 500
+                        return jsonify({"error": "Failed to fetch the created list."}), 500 # Internal Server Error
                 else:
-                    return jsonify({"error": "Failed to create list."}), 500
+                    return jsonify({"error": "Failed to create list."}), 500 # Internal Server Error
             except Error as e:
                 print(f"An unexpected error occurred: '{e}'")
                 return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
