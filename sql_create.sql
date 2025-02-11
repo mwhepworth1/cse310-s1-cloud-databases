@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `cse310-cloud-db`.`tasks` (
   CONSTRAINT `tasks_fk1`
     FOREIGN KEY (`list_id`)
     REFERENCES `cse310-cloud-db`.`lists` (`lists_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION) 
 ENGINE = InnoDB;
 
 

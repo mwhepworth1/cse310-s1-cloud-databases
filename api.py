@@ -46,7 +46,7 @@ def create_list():
                         return jsonify({"error": "Failed to fetch the created list."}), 500 # Internal Server Error
                 else:
                     return jsonify({"error": "Failed to create list."}), 500 # Internal Server Error
-            except Error as e:
+            except Error as e: 
                 print(f"An unexpected error occurred: '{e}'")
                 return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
             finally:

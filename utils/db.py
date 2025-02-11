@@ -46,7 +46,7 @@ class Database:
                 cursor.close()
         else:
             print("No connection to the database established.")
-            return None
+            return None 
 
     def close(self):
         if self.connection:

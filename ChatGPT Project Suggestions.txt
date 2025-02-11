@@ -16,7 +16,7 @@ Login: Validate credentials and issue a session token or JWT.
 Configure database models:
 User: Stores user information.
 ToDoList: Links tasks to specific users with fields for task description, status (checked/unchecked), and timestamps.
-Set Up the Cloud Database
+Set Up the Cloud Database 
 
 Create a project in Firebase/AWS.
 Configure Firestore/DynamoDB tables or collections for users and to_do_lists.

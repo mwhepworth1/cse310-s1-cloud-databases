@@ -11,7 +11,7 @@ We are aiming to create a web-based to do list application that communicates wit
 
 ## Architecture
 Python / Flask
-PostgreSQL
+PostgreSQL 
 Bootstrap (CSS & JS) for frontend
 Visual Studio Code
 GitHub Repo & Project Boards
