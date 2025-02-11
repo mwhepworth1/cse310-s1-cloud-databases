@@ -5,7 +5,7 @@
 # HOW TO START THE APP:
 # python3 app.py
 # OR
-# python app.py
+# python app.py 
 
 # Import the Flask class from the flask module
 from flask import Flask, render_template, request, redirect, url_for
