@@ -42,7 +42,7 @@ Group Text
 |Ensuring GitHub is Working          |   Matthew Hepworth         |
 |Maintaining Documentation           |   Karina Winn              |
 |Create & Display Presentations      |   Brendan Willis           |
-|Submit Team Assignments             |   Brendan Willis           |
+|Submit Team Assignments             |   Aaron Heiner          |
 
 ## Reflections
 
