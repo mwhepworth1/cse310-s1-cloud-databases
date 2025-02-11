@@ -249,7 +249,6 @@ footer {
     .list-container {
         grid-template-columns: repeat(4, 1fr);
     }
->>>>>>> 4cfa6e7753368c5f7115d5805f7baa7bbcd9947b
 }
 
 @media (max-width: 768px) {
