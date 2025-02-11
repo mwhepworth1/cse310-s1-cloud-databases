@@ -16,25 +16,29 @@ class Database:
     def connect(self):
         try:
             self.connection = mysql.connector.connect(
-                host = self.host,
-                user = self.user,
-                passwd = self.password,
-                database = self.database,
-                auth_plugin = self.auth_plugin
+                host=self.host,
+                user=self.user,
+                passwd=self.password,
+                database=self.database,
+                auth_plugin=self.auth_plugin
             )
             print("[DB] Connection to server successful")
             return True
         except Error as e:
-            print(f"An unexpected error ocurred: '{e}'")
+            print(f"An unexpected error occurred: '{e}'")
             return False
-    
+
     def query(self, query, values=None):
         if self.connection:
-            cursor = self.connection.cursor()
+            cursor = self.connection.cursor(dictionary=True)
             try:
                 cursor.execute(query, values)
-                self.connection.commit()
-                return cursor.lastrowid  # or any other result you need
+                if query.strip().upper().startswith("SELECT"):
+                    result = cursor.fetchall()
+                else:
+                    self.connection.commit()
+                    result = cursor.lastrowid
+                return result
             except Error as e:
                 print(f"An unexpected error occurred: '{e}'")
                 return None
@@ -43,7 +47,7 @@ class Database:
         else:
             print("No connection to the database established.")
             return None
-    
+
     def close(self):
         if self.connection:
             self.connection.close()
