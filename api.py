@@ -382,7 +382,7 @@ def create_user():
     else:
         return jsonify({"error": "Could not establish connection to database"}), 500
 
-@api_bp.route('/user/verify', methods=['GET'])
+@api_bp.route('/user/verify', methods=['POST'])
 def verify_password(): 
     """
     METHOD: POST /user/verify
