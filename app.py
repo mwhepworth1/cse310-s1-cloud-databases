@@ -2,6 +2,11 @@
 # pip install python-dotenv
 # pip install mysql.connector
 
+# HOW TO START THE APP:
+# python3 app.py
+# OR
+# python app.py
+
 # Import the Flask class from the flask module
 from flask import Flask, render_template, request, redirect, url_for
 from api import api_bp
