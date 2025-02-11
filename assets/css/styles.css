@@ -15,7 +15,7 @@ body {
     background-repeat: repeat;
     background-size: 500px 500px; 
     background-blend-mode: overlay;
-    background-color: rgba(253, 253, 253, 0.967);
+    background-color: rgba(253, 253, 253, 0.967); 
     margin: 0;
     padding: 0;
     display: grid;

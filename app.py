@@ -18,7 +18,7 @@ app.register_blueprint(api_bp)
 
 #######################################
 #             FRONT END               #
-#######################################
+####################################### 
 
 # In-memory storage for to-do items
 todo_items = []
