@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `cse310-cloud-db`.`users` ;
 CREATE TABLE IF NOT EXISTS `cse310-cloud-db`.`users` (
   `users_id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
-  `pswd_hash` VARCHAR(45) NOT NULL,
+  `pswd_hash` VARCHAR(255) NOT NULL,
   `picture_url` VARCHAR(45) NULL,
   PRIMARY KEY (`users_id`))
 ENGINE = InnoDB;

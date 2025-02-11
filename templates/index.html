@@ -70,21 +70,18 @@
             <h1>To-Do List App</h1>
         </div>
         <nav class="header-right">
-            <a href="/loginpage" class="nav-link">Login</a>
-            <a href="/registerpage" class="nav-link">Register</a>
+            <a href="/login" class="nav-link">Login</a>
+            <a href="/register" class="nav-link">Register</a>
         </nav>
     </header>
-
-
     <div class="search-container">
         <form id="search-form">
             <input type="text" id="search-input" placeholder="Search for a list" required>
-
         </form>
     </div>
     <div class="container">
         <input type="hidden" id="user-id" value="{{ user_id }}">
-        <div id="todo-lists" class="list-container"> 
+        <div id="todo-lists" class="list-container">
             <div class="list-card add-card" id="add-list-card">
                 <button id="add-list-button">+</button>
             </div>

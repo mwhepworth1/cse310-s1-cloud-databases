@@ -15,7 +15,7 @@ body {
     background-repeat: repeat;
     background-size: 500px 500px; 
     background-blend-mode: overlay;
-    background-color: rgba(253, 253, 253, 0.967); 
+    background-color: rgba(253, 253, 253, 0.967);
     margin: 0;
     padding: 0;
     display: grid;
@@ -59,7 +59,7 @@ input[type="text"] {
     border-radius: 4px;
 }
 
-.sumbit_button{
+button {
     padding: 10px;
     border: none;
     position: absolute; 
@@ -74,20 +74,8 @@ input[type="text"] {
     align-items: center;
     font-size: 16px;
     bottom: 10px;
-    left: 50%; /* Positioned at 50% of the form's width */
-    transform: translateX(-50%); /* Centered horizontally */
-}
-.delete-button{
- 
-    display: inline-block;
-    padding: 2px 6px;
-    border: 2px outset buttonface;
-    background-color: buttonface;
-    color: buttontext;
-    font-size: 13px;
-    cursor: pointer;
-
-
+    left: 50%; 
+    transform: translateX(-50%); 
 }
 
 button:hover {
@@ -216,7 +204,6 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/*  */
 .search-container {
     grid-column: 1 / -1; /* Span across all columns */
     padding: 10px 0;
