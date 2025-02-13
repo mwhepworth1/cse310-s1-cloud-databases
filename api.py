@@ -413,7 +413,7 @@ def verify_password():
                     session['user_id'] = result[0]['users_id']
                     return jsonify({"message": "Password matches."}), 200
                 else:
-                    return jsonify({"message": "Password does not match."}), 200
+                    return jsonify({"message": "Password does not match."}), 401
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
