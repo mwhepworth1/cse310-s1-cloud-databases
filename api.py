@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from utils.db import Database
 from mysql.connector import Error
 import bcrypt # Have to run pip install bcrypt in terminal before using
@@ -388,7 +388,7 @@ def verify_password():
     METHOD: POST /user/verify
 
     Keys
-    - username (str): Name accociated with the user
+    - username (str): Name associated with the user
     - password (str): Password associated with the user
 
     Returns
@@ -397,12 +397,12 @@ def verify_password():
     """
     if db.connect():
         data = request.get_json() 
-        required_keys = ["username","password"]
+        required_keys = ["username", "password"]
         for key in required_keys:
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         try:
-            query = "SELECT pswd_hash from users WHERE username = %s"
+            query = "SELECT users_id, pswd_hash FROM users WHERE username = %s"
             values = [data["username"]]
             result = db.query(query, values)
             db.close()
@@ -410,11 +410,12 @@ def verify_password():
                 stored_hash = result[0]['pswd_hash'].encode('utf-8')
                 input_byte = data["password"].encode('utf-8')
                 if bcrypt.checkpw(input_byte, stored_hash):
-                    return jsonify({"message": "Password matches."}), 200
+                    session['user_id'] = result[0]['users_id']  # Set user_id in the session
+                    return jsonify({"message": "Password matches.", "user_id": result[0]['users_id']}), 200
                 else:
                     return jsonify({"message": "Password does not match."}), 200
             else:
-                return jsonify({"error": "An unexpected error occurred"}), 500
+                return jsonify({"error": "User not found."}), 404
         except Error as e:
             print(f"An unexpected error occurred: '{e}'")
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
