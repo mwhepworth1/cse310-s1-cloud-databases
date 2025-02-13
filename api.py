@@ -133,7 +133,7 @@ def get_list():
     METHOD: GET /list/get
 
     Request Arguments
-    - user_id (int): ID of the user
+    - user_id (int): ID of the user (required)
     - list_id (int): ID of the list to be retrieved
 
     Returns
