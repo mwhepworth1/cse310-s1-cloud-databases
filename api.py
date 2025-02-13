@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from utils.db import Database
 from mysql.connector import Error
 import bcrypt # Have to run pip install bcrypt in terminal before using
@@ -402,7 +402,7 @@ def verify_password():
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         try:
-            query = "SELECT pswd_hash from users WHERE username = %s"
+            query = "SELECT pswd_hash, users_id from users WHERE username = %s"
             values = [data["username"]]
             result = db.query(query, values)
             db.close()
@@ -410,6 +410,7 @@ def verify_password():
                 stored_hash = result[0]['pswd_hash'].encode('utf-8')
                 input_byte = data["password"].encode('utf-8')
                 if bcrypt.checkpw(input_byte, stored_hash):
+                    session['user_id'] = result[0]['users_id']
                     return jsonify({"message": "Password matches."}), 200
                 else:
                     return jsonify({"message": "Password does not match."}), 200
