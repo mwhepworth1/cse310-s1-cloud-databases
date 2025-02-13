@@ -407,8 +407,9 @@ def verify_password():
             result = db.query(query, values)
             db.close()
             if result:
+                stored_hash = result[0]['pswd_hash'].encode('utf-8')
                 input_byte = data["password"].encode('utf-8')
-                if bcrypt.checkpw(input_byte, result):
+                if bcrypt.checkpw(input_byte, stored_hash):
                     return jsonify({"message": "Password matches."}), 200
                 else:
                     return jsonify({"message": "Password does not match."}), 200
