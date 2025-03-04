@@ -7,102 +7,6 @@
     <title>Login - To-Do List</title>
     <meta name="description" content="A simple to-do list application to manage your tasks.">
 </head>
-    <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #667eea, #764ba2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-header {
-    background-color: #333;
-    color: white;
-    padding: 1em 0;
-    text-align: center;
-    width: 100%;
-    position: fixed;
-    top: 0;
-}
-nav a {
-    color: white;
-    margin: 0 1em;
-    text-decoration: none;
-}
-.container {
-    max-width: 400px;
-    margin: 5em auto;
-    padding: 2em;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
-}
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center the button horizontally */
-}
-label {
-    margin-top: 1em;
-}
-input {
-    padding: 0.5em;
-    margin-top: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-}
-input:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-button {
-    /* margin-top: 6em; Increased margin to move the button further down by 50 pixels */
-    padding: 0.75em;
-    background: linear-gradient(to right, #667eea, #764ba2);
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 25px;
-    font-size: 1em;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-
-button:hover {
-    background: linear-gradient(to right, #5563c1, #5e3b8a);
-}
-#error-message {
-    margin-top: 1em;
-    color: red;
-}
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-footer {
-    background-color: #333;
-    color: white;
-    padding: 1em 0;
-    text-align: center;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-}
-    </style>
 <body>
     <header>
         <nav>
@@ -112,7 +16,7 @@ footer {
     </header>
     <div class="container">
         <h1>Login</h1>
-        <form id="loginForm">
+        <form id="loginForm" class="auth-form">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <label for="password">Password:</label>
@@ -143,9 +47,6 @@ footer {
                 if (response.ok && data.message === "Password matches.") {
                     // Redirect to home page or dashboard
                     window.location.href = '/';
-                } else if (response.status === 401) {
-                    document.getElementById('error-message').textContent = 'Invalid password';
-                    document.getElementById('error-message').style.display = 'block';
                 } else {
                     document.getElementById('error-message').textContent = 'Invalid username or password';
                     document.getElementById('error-message').style.display = 'block';

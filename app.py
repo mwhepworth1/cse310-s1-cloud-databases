@@ -2,7 +2,6 @@
 # pip install python-dotenv
 # pip install mysql.connector
 # pip install flask-session
-# pip install bcrypt
 
 # HOW TO START THE APP:
 # python3 app.py

@@ -46,14 +46,55 @@ h1 {
 }
 
 form {
-    margin-bottom: 20px;
-    position: relative;
+    margin-bottom: 75px;
     width: 100%;
     align-items: center;
     justify-content: center;
 }
 
+/* Add new styles for auth forms */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.auth-form button {
+    position: relative !important; /* Override absolute positioning */
+    border-radius: 4px;
+    width: 100%;
+    height: 40px;
+    transform: none;
+    margin-top: 10px;
+    left: 0;
+    bottom: 0;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #83C5BE;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.auth-form label {
+    text-align: left;
+    color: #006D77;
+    margin-bottom: 5px;
+}
+
+
 input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #83C5BE;
+    border-radius: 4px;
+}
+input[type="password"] {
     width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 10px;
@@ -82,6 +123,17 @@ button {
 
 button:hover {
     background-color: #83C5BE;
+}
+
+/* Ensure other buttons maintain their styling */
+button:not(.auth-form button) {
+    position: absolute;
+    border-radius: 50%;
+    width: var(--button-size);
+    height: var(--button-size);
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .list-container {
