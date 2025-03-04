@@ -21,18 +21,53 @@
         <form id="search-form">
             <input type="text" id="search-input" placeholder="Search for a task" required>
         </form>
+
+      
     </div>
     <div class="container">
         <input type="hidden" id="list-id" value="{{ list_id }}">
         <div id="todo-tasks" class="list-container">
-            <!-- Task cards will be dynamically inserted here -->
+            
+
+             
         </div>
+        <form action="/add_list_task" method="POST">
+            <input type="hidden" name="list_id" value="{{ list_id }}">
+            <input type="text" name="task_name" placeholder="Task Name" required>
+            <input type="text" name="task_description" placeholder="Task Description" required>
+            <button type="submit">Add Task</button>
+        </form>
     </div>
     <footer>
         <p>A CSE 310 Project By: Aaron Heiner, Karina Winn, Brendan Willis, and Matthew Hepworth</p>
     </footer>
 
+
+
+
+    <!-- DROP TABLE IF EXISTS `cse310-cloud-db`.`lists` ;
+
+    CREATE TABLE IF NOT EXISTS `cse310-cloud-db`.`lists` (
+      `lists_id` INT NOT NULL AUTO_INCREMENT,
+      `list_name` VARCHAR(45) NOT NULL,
+      `user_id` INT NULL,
+      PRIMARY KEY (`lists_id`),
+      UNIQUE INDEX `lists_id_UNIQUE` (`lists_id` ASC) VISIBLE,
+      INDEX `lists_fk1_idx` (`user_id` ASC) VISIBLE,
+      CONSTRAINT `lists_fk1`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `cse310-cloud-db`.`users` (`users_id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION)
+    ENGINE = InnoDB;
+<!--  -->
+
+
+
     <script>
+
+
+        // comments to understand the code
         document.getElementById('search-input').addEventListener('input', function () {
             const searchValue = this.value.toLowerCase();
             const cards = document.querySelectorAll('.task-card');
@@ -45,8 +80,25 @@
                 }
             });
         });
+        const task = {
+                        tasks_id: 1,
+                        title: "Buy Groceries",
+                        description: "Milk, eggs, and bread",
+                        is_done: false
+                };
+        addTaskCard(task)
 
         function addTaskCard(task) {
+//             `tasks_id` INT NOT NULL AUTO_INCREMENT,
+//   `title` VARCHAR(100) NOT NULL,
+//   `description` TEXT NOT NULL,
+//   `is_done` TINYINT NOT NULL,
+//   `list_id` INT NOT NULL,
+        //    According
+
+
+            alert("Button Clicked! (Test for button)");
+         
             const container = document.getElementById('todo-tasks');
             const card = document.createElement('div');
             card.className = 'task-card';
@@ -92,6 +144,6 @@
         }
 
         fetchTasks();
-    </script>
+    </script> -->
 </body>
 </html>

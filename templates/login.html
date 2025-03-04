@@ -143,6 +143,9 @@ footer {
                 if (response.ok && data.message === "Password matches.") {
                     // Redirect to home page or dashboard
                     window.location.href = '/';
+                } else if (response.status === 401) {
+                    document.getElementById('error-message').textContent = 'Invalid password';
+                    document.getElementById('error-message').style.display = 'block';
                 } else {
                     document.getElementById('error-message').textContent = 'Invalid username or password';
                     document.getElementById('error-message').style.display = 'block';

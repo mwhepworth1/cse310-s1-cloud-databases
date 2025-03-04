@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from utils.db import Database
 from mysql.connector import Error
 import bcrypt # Have to run pip install bcrypt in terminal before using
@@ -133,7 +133,7 @@ def get_list():
     METHOD: GET /list/get
 
     Request Arguments
-    - user_id (int): ID of the user
+    - user_id (int): ID of the user (required)
     - list_id (int): ID of the list to be retrieved
 
     Returns
@@ -159,7 +159,7 @@ def get_list():
             if result:
                 return jsonify({"message": "List(s) successfully retrieved.", "data": result}), 200
             else:
-                return jsonify({"error": "An unexpected error occurred"}), 500
+                return jsonify({"error": "No lists found."}), 404
         except Error as e:
             print(f"An unexpected error occurred: '{e}'")
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
@@ -402,7 +402,7 @@ def verify_password():
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         try:
-            query = "SELECT pswd_hash from users WHERE username = %s"
+            query = "SELECT pswd_hash, users_id from users WHERE username = %s"
             values = [data["username"]]
             result = db.query(query, values)
             db.close()
@@ -410,9 +410,10 @@ def verify_password():
                 stored_hash = result[0]['pswd_hash'].encode('utf-8')
                 input_byte = data["password"].encode('utf-8')
                 if bcrypt.checkpw(input_byte, stored_hash):
+                    session['user_id'] = result[0]['users_id']
                     return jsonify({"message": "Password matches."}), 200
                 else:
-                    return jsonify({"message": "Password does not match."}), 200
+                    return jsonify({"message": "Password does not match."}), 401
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:

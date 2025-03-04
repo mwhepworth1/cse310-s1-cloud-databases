@@ -183,8 +183,10 @@
             const userId = document.getElementById('user-id').value;
             const response = await fetch(`/api/list/get?user_id=${userId}`);
             const result = await response.json();
-            if (response.ok) {
+            if (response.status === 200) {
                 result.data.forEach(addListCard);
+            } else if (response.status === 404) {
+                // Handle the error by doing nothing.
             } else {
                 alert(result.error);
             }
