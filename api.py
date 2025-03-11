@@ -323,22 +323,25 @@ def toggle_element():
     """
     if db.connect():
         data = request.get_json()
-        required_keys = ["user_id", "list_id", "element_id"]
+        required_keys = [ "list_id", "task_id"]
         for key in required_keys:
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try: 
             # SET is_done = NOT is_done is the same as "is_done = not is_done" or "is_done = !is_done".
-            query = "UPDATE tasks SET is_done = NOT is_done WHERE user_id = %s AND list_id = %s AND tasks_id = %s"
-            values = [data["user_id"], data["list_id"], data["element_id"]]
+            query = "UPDATE tasks SET is_done = NOT is_done WHERE list_id = %s AND tasks_id = %s"
+            values = [data["list_id"], data["task_id"]]
             result = db.query(query, values)
             db.close()
+            print(f"Query result: {result}")
             if result:
                 return jsonify({"message": "Task successfully toggled.", "data": result}), 200
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
+
+            # TODO Trying ot figure out why there is an error here
             print(f"An unexpected error occurred: '{e}'")
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
     else:
