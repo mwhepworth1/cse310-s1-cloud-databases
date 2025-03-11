@@ -29,23 +29,20 @@
             align-items: start; 
         }
 
-        .list-card {
+        .task-card {
             background-color: #FFDDD2;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 150px;
-            height: 225px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             cursor: pointer;
             transition: transform 0.2s;
         }
 
-        .list-card:hover {
+        .task-card:hover {
             transform: scale(1.05);
         }
 
@@ -94,7 +91,7 @@
                 width: calc(100% - 22px); 
             }
 
-            .list-card {
+            .task-card {
                 width: 120px;
                 height: 180px; 
             }
@@ -120,7 +117,7 @@
                 width: calc(100% - 12px); 
             }
 
-            .list-card {
+            .task-card {
                 width: 90px; 
                 height: 150px;
             }
@@ -193,11 +190,12 @@
             card.className = 'task-card';
             card.setAttribute('data-task-id', task.tasks_id);
             card.innerHTML = `
+                <input type="checkbox" ${task.is_done ? 'checked' : ''} class="toggle-checkbox">
                 <h2>${task.title}</h2>
                 <p>${task.description}</p>
-                <button class="toggle-btn">${task.is_done ? 'Undo' : 'Complete'}</button>
+                <button class="edit-btn">Edit</button>
             `;
-            card.querySelector('.toggle-btn').addEventListener('click', async function () {
+            card.querySelector('.toggle-checkbox').addEventListener('change', async function () {
                 const taskId = task.tasks_id;
                 const listId = document.getElementById('list-id').value;
                 const userId = document.getElementById('user-id').value;
@@ -210,11 +208,13 @@
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
-                if (response.ok) {
-                    this.textContent = result.data[0].is_done ? 'Undo' : 'Complete';
-                } else {
+                if (!response.ok) {
                     alert(result.error);
                 }
+            });
+            card.querySelector('.edit-btn').addEventListener('click', function () {
+                // Implement edit functionality here
+                alert('Edit button clicked for task: ' + task.title);
             });
             container.appendChild(card);
         }
