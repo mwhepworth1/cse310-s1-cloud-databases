@@ -334,11 +334,14 @@ def toggle_element():
             values = [data["list_id"], data["task_id"]]
             result = db.query(query, values)
             db.close()
+            print(f"Query result: {result}")
             if result:
                 return jsonify({"message": "Task successfully toggled.", "data": result}), 200
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
+
+            # TODO Trying ot figure out why there is an error here
             print(f"An unexpected error occurred: '{e}'")
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
     else:
