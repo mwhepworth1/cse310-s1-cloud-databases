@@ -51,7 +51,9 @@ def logout():
 
 @app.route('/list/<int:list_id>')
 def list(list_id):
-    return render_template('list.html', list_id=list_id)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('list.html', list_id=list_id, user_id=session.get('user_id'))
 
 # Check if the executed file is the main program and run the app
 if __name__ == '__main__':

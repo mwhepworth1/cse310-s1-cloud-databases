@@ -182,7 +182,7 @@ def create_element():
     """
     if db.connect():
         data = request.get_json()
-        required_keys = ["list_id", "title", "description", "description"]
+        required_keys = ["list_id", "title", "description"]
         for key in required_keys:
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
@@ -281,7 +281,6 @@ def get_element():
     Request Arguments
     - user_id (int): ID of the user
     - list_id (int): ID of the list to which the task belongs
-    - task_id (int): ID of the task to be retrieved
 
     Returns
     - JSON response with a success message and the retrieved task data
@@ -290,13 +289,12 @@ def get_element():
     if db.connect():
         user_id = request.args.get('user_id')
         list_id = request.args.get('list_id')
-        task_id = request.args.get('task_id')
-        if not user_id or not list_id or not task_id:
+        if not user_id or not list_id:
             return jsonify({"error": "Missing required query parameter: user_id, list_id, or element_id"}), 400
         
         try:
-            query = "SELECT * FROM tasks WHERE user_id = %s AND list_id = %s AND tasks_id = %s"
-            values = [user_id, list_id, task_id]
+            query = "SELECT * FROM tasks WHERE list_id = %s"
+            values = [list_id]
             result = db.query(query, values)
             db.close()
             if result:

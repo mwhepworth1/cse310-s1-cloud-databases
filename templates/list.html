@@ -156,15 +156,49 @@
     <div class="container">
         <button onclick="window.history.back()" class="back-button">Back</button>
         <input type="hidden" id="list-id" value="{{ list_id }}">
+        <input type="hidden" id="user-id" value="{{ user_id }}">
         <div id="todo-tasks" class="list-container">
             <!-- Task cards will be dynamically inserted here -->
         </div>
-        <form action="/add_list_task" method="POST">
+        <form id="addTaskForm">
             <input type="hidden" name="list_id" value="{{ list_id }}">
             <input type="text" name="task_name" placeholder="Task Name" required>
             <input type="text" name="task_description" placeholder="Task Description" required>
             <button type="submit">Add Task</button>
         </form>
+
+        <script>
+            document.getElementById('addTaskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = {
+                list_id: this.list_id.value,
+                title: this.task_name.value,
+                description: this.task_description.value 
+            };
+
+            try {
+                const response = await fetch('/api/list/tasks/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Clear form and refresh tasks
+                    this.reset();
+                    fetchTasks();
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                alert('Error adding task');
+            }
+            });
+        </script>
     </div>
     <footer>
         <p>A CSE 310 Project By: Aaron Heiner, Karina Winn, Brendan Willis, and Matthew Hepworth</p>
