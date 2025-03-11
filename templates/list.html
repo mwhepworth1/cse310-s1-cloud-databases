@@ -6,6 +6,137 @@
     <link rel="stylesheet" href="/assets/css/styles.css">
     <title>To-Do List</title>
     <meta name="description" content="A simple to-do list application to manage your tasks.">
+    <style>
+        .back-button {
+            background-color: #006D77;
+            color: #FFF;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #83C5BE;
+        }
+
+        .list-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            justify-content: center;
+            align-items: start; 
+        }
+
+        .task-card {
+            background-color: #FFDDD2;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .task-card:hover {
+            transform: scale(1.05);
+        }
+
+        .add-card {
+            background-color: #006D77;
+            color: #FFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative; 
+            cursor: pointer; 
+        }
+
+        .add-card button {
+            background-color: #006D77;
+            color: #FFF;
+            border: none;
+            border-radius: 50%;
+            width: var(--button-size);
+            height: var(--button-size);
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .add-card button:hover {
+            background-color: #83C5BE;
+        }
+
+        @media (max-width: 1024px) {
+            .list-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90%; 
+            }
+
+            input[type="text"] {
+                width: calc(100% - 22px); 
+            }
+
+            .task-card {
+                width: 120px;
+                height: 180px; 
+            }
+
+            .add-card button {
+                --button-size: 60px; 
+                width: var(--button-size);
+                height: var(--button-size);
+            }
+
+            .list-container {
+                grid-template-columns: repeat(3, 1fr); 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 100%; 
+                padding: 10px; 
+            }
+
+            input[type="text"] {
+                width: calc(100% - 12px); 
+            }
+
+            .task-card {
+                width: 90px; 
+                height: 150px;
+            }
+
+            .add-card button {
+                --button-size: 50px; 
+                width: var(--button-size);
+                height: var(--button-size);
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .list-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,23 +144,20 @@
             <h1>To-Do List App</h1>
         </div>
         <nav class="header-right">
-            <a href="/loginpage" class="nav-link">Login</a>
-            <a href="/registerpage" class="nav-link">Register</a>
+            <a href="/login" class="nav-link">Login</a>
+            <a href="/register" class="nav-link">Register</a>
         </nav> 
     </header>
     <div class="search-container">
         <form id="search-form">
             <input type="text" id="search-input" placeholder="Search for a task" required>
         </form>
-
-      
     </div>
     <div class="container">
+        <button onclick="window.history.back()" class="back-button">Back</button>
         <input type="hidden" id="list-id" value="{{ list_id }}">
         <div id="todo-tasks" class="list-container">
-            
-
-             
+            <!-- Task cards will be dynamically inserted here -->
         </div>
         <form action="/add_list_task" method="POST">
             <input type="hidden" name="list_id" value="{{ list_id }}">
@@ -42,32 +170,7 @@
         <p>A CSE 310 Project By: Aaron Heiner, Karina Winn, Brendan Willis, and Matthew Hepworth</p>
     </footer>
 
-
-
-
-    <!-- DROP TABLE IF EXISTS `cse310-cloud-db`.`lists` ;
-
-    CREATE TABLE IF NOT EXISTS `cse310-cloud-db`.`lists` (
-      `lists_id` INT NOT NULL AUTO_INCREMENT,
-      `list_name` VARCHAR(45) NOT NULL,
-      `user_id` INT NULL,
-      PRIMARY KEY (`lists_id`),
-      UNIQUE INDEX `lists_id_UNIQUE` (`lists_id` ASC) VISIBLE,
-      INDEX `lists_fk1_idx` (`user_id` ASC) VISIBLE,
-      CONSTRAINT `lists_fk1`
-        FOREIGN KEY (`user_id`)
-        REFERENCES `cse310-cloud-db`.`users` (`users_id`)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-<!--  -->
-
-
-
     <script>
-
-
-        // comments to understand the code
         document.getElementById('search-input').addEventListener('input', function () {
             const searchValue = this.value.toLowerCase();
             const cards = document.querySelectorAll('.task-card');
@@ -80,35 +183,19 @@
                 }
             });
         });
-        const task = {
-                        tasks_id: 1,
-                        title: "Buy Groceries",
-                        description: "Milk, eggs, and bread",
-                        is_done: false
-                };
-        addTaskCard(task)
 
         function addTaskCard(task) {
-//             `tasks_id` INT NOT NULL AUTO_INCREMENT,
-//   `title` VARCHAR(100) NOT NULL,
-//   `description` TEXT NOT NULL,
-//   `is_done` TINYINT NOT NULL,
-//   `list_id` INT NOT NULL,
-        //    According
-
-
-            alert("Button Clicked! (Test for button)");
-         
             const container = document.getElementById('todo-tasks');
             const card = document.createElement('div');
             card.className = 'task-card';
             card.setAttribute('data-task-id', task.tasks_id);
             card.innerHTML = `
+                <input type="checkbox" ${task.is_done ? 'checked' : ''} class="toggle-checkbox">
                 <h2>${task.title}</h2>
                 <p>${task.description}</p>
-                <button class="toggle-btn">${task.is_done ? 'Undo' : 'Complete'}</button>
+                <button class="edit-btn">Edit</button>
             `;
-            card.querySelector('.toggle-btn').addEventListener('click', async function () {
+            card.querySelector('.toggle-checkbox').addEventListener('change', async function () {
                 const taskId = task.tasks_id;
                 const listId = document.getElementById('list-id').value;
                 const userId = document.getElementById('user-id').value;
@@ -121,11 +208,13 @@
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
-                if (response.ok) {
-                    this.textContent = result.data[0].is_done ? 'Undo' : 'Complete';
-                } else {
+                if (!response.ok) {
                     alert(result.error);
                 }
+            });
+            card.querySelector('.edit-btn').addEventListener('click', function () {
+                // Implement edit functionality here
+                alert('Edit button clicked for task: ' + task.title);
             });
             container.appendChild(card);
         }
@@ -144,6 +233,6 @@
         }
 
         fetchTasks();
-    </script> -->
+    </script>
 </body>
 </html>
