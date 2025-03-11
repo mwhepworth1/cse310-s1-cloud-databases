@@ -219,7 +219,7 @@ def update_element():
     """
     if db.connect():
         data = request.get_json()
-        required_keys = ["list_id", "title", "description"]
+        required_keys = ["list_id", "title", "description", "task_id"]
         for key in required_keys:
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400

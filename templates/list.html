@@ -247,8 +247,34 @@
                 }
             });
             card.querySelector('.edit-btn').addEventListener('click', function () {
-                // Implement edit functionality here
-                alert('Edit button clicked for task: ' + task.title);
+
+                const task_id = task.tasks_id;
+
+                document.querySelector('.task-card[data-task-id="' + task_id + '"] h2').innerText = prompt("Edit Task Title", task.title);
+                document.querySelector('.task-card[data-task-id="' + task_id + '"] p').innerText = prompt("Edit Task Description", task.description);
+                
+                // After prompting the user for their new input, lets update the task in the database
+                const listId = document.getElementById('list-id').value;
+                const userId = document.getElementById('user-id').value;
+                const data = {
+                    list_id: listId,
+                    task_id: task_id,
+                    title: document.querySelector('.task-card[data-task-id="' + task_id + '"] h2').innerText,
+                    description: document.querySelector('.task-card[data-task-id="' + task_id + '"] p').innerText
+                }
+                fetch('/api/list/tasks/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (!response.ok) {
+                        alert(result.error);
+                    }
+                });
             });
             container.appendChild(card);
         }
