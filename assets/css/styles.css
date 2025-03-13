@@ -289,7 +289,7 @@ footer {
 }
 
 /* Styles from login.html */
-body {
+.login-page {
     background: linear-gradient(to right, #667eea, #764ba2);
     display: flex;
     justify-content: center;
@@ -297,7 +297,7 @@ body {
     height: 100vh;
 }
 
-header {
+.login-page header {
     background-color: #333;
     color: white;
     padding: 1em 0;
@@ -307,13 +307,13 @@ header {
     top: 0;
 }
 
-nav a {
+.login-page nav a {
     color: white;
     margin: 0 1em;
     text-decoration: none;
 }
 
-.container {
+.login-page .container {
     max-width: 400px;
     margin: 5em auto;
     padding: 2em;
@@ -324,17 +324,17 @@ nav a {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-form {
+.login-page form {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the button horizontally */
 }
 
-label {
+.login-page label {
     margin-top: 1em;
 }
 
-input {
+.login-page input {
     padding: 0.5em;
     margin-top: 0.5em;
     border: 1px solid #ccc;
@@ -342,13 +342,13 @@ input {
     transition: border-color 0.3s ease;
 }
 
-input:focus {
+.login-page input:focus {
     border-color: #007bff;
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-button {
+.login-page button {
     padding: 0.75em;
     background: linear-gradient(to right, #667eea, #764ba2);
     color: white;
@@ -359,11 +359,11 @@ button {
     transition: background 0.3s ease, transform 0.3s ease;
 }
 
-button:hover {
+.login-page button:hover {
     background: linear-gradient(to right, #5563c1, #5e3b8a);
 }
 
-#error-message {
+.login-page #error-message {
     margin-top: 1em;
     color: red;
 }
@@ -379,7 +379,7 @@ button:hover {
     }
 }
 
-footer {
+.login-page footer {
     background-color: #333;
     color: white;
     padding: 1em 0;
