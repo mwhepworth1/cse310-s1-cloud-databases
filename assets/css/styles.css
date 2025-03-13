@@ -15,7 +15,7 @@ body {
     background-repeat: repeat;
     background-size: 500px 500px; 
     background-blend-mode: overlay;
-    background-color: rgba(253, 253, 253, 0.967);
+    background: linear-gradient(to right, #667eea, #764ba2);
     margin: 0;
     padding: 0;
     display: grid;
@@ -28,7 +28,7 @@ button{
     height: 2rem;
 }
 h1 {
-    color: #006D77;
+    color: #000000;
 }
 
 .container {
@@ -36,7 +36,7 @@ h1 {
     background-color: #FFF;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 6px 7px 13px 3px #000000;
     width: 100%;
     max-width: 1200px;
     text-align: center;
@@ -82,7 +82,7 @@ form {
 
 .auth-form label {
     text-align: left;
-    color: #006D77;
+    color: #000000;
     margin-bottom: 5px;
 }
 
@@ -142,14 +142,14 @@ button:not(.auth-form button) {
     gap: 20px;
     justify-content: center;
     align-items: start; 
+    min-height: 210px;
 }
 
 .list-card {
     background-color: #FFDDD2;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    box-shadow: 0 0 3px #000000;    width: 100%;
     max-width: 150px;
     height: 225px;
     display: flex;
@@ -165,8 +165,8 @@ button:not(.auth-form button) {
 }
 
 .add-card {
-    background-color: #006D77;
-    color: #FFF;
+    background-color: #ddd;
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -177,8 +177,8 @@ button:not(.auth-form button) {
 }
 
 .add-card button {
-    background-color: #006D77;
-    color: #FFF;
+    background-color: #ddd;
+    color: #333;
     border: none;
     border-radius: 50%;
     width: var(--button-size);
@@ -222,13 +222,16 @@ li button:hover {
 }
 
 p {
-    color: #666;
+    color: #edf6f9;
+    font-weight: bold;
+    margin: 15px; 
+
 }
 
 header {
     grid-column: 1 / -1; /* Span across all columns */
     width: 100%;
-    background-color: #006D77;
+    background-color: #333;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -284,7 +287,7 @@ footer {
     grid-column: 2 / 3; /* Center the footer */
     text-align: center;
     padding: 10px;
-    background-color: #FFF;
+    background: linear-gradient(to right, #667eea, #764ba2);
     border-top: 1px solid #DDD;
 }
 
