@@ -286,6 +286,8 @@
             const response = await fetch(`/api/list/tasks/get?user_id=${userId}&list_id=${listId}`);
             const result = await response.json();
             if (response.ok) {
+                const container = document.getElementById('todo-tasks');
+                container.innerHTML = '';
                 result.data.forEach(addTaskCard);
             } else {
                 alert(result.error);
