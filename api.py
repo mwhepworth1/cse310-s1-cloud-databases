@@ -367,6 +367,11 @@ def create_user():
             if key not in data:
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         try:
+            query = "SELECT * FROM users WHERE username = %s"
+            values = [data["username"]]
+            result = db.query(query, values)
+            if result:
+                return jsonify({"error": "Username already in use."}), 500
             query = "INSERT INTO users (username, pswd_hash) VALUES (%s, %s)"
             password_byte = data["password"].encode('utf-8')
             hashed = bcrypt.hashpw(password_byte, bcrypt.gensalt())
