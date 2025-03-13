@@ -337,8 +337,7 @@ def toggle_element():
             print(f"Query result: {result}")
             if result:
                 return jsonify({"message": "Task successfully toggled.", "data": result}), 200
-            else:
-                return jsonify({"error": "An unexpected error occurred"}), 500
+            
         except Error as e:
 
             # TODO Trying ot figure out why there is an error here
