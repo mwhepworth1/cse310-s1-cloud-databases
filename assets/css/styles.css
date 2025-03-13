@@ -91,7 +91,7 @@ input[type="text"] {
     width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #83C5BE;
+    border: 1px solid #333;
     border-radius: 4px;
 }
 input[type="password"] {
@@ -129,9 +129,9 @@ button:hover {
 button:not(.auth-form button) {
     position: absolute;
     border-radius: 50%;
-    width: var(--button-size);
-    height: var(--button-size);
-    bottom: 10px;
+    /* width: var(--button-size);
+    height: var(--button-size); */
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -146,7 +146,7 @@ button:not(.auth-form button) {
 }
 
 .list-card {
-    background-color: #FFDDD2;
+    background-color: #1a6ea947;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 3px #000000;    width: 100%;
