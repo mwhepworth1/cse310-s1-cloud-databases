@@ -149,7 +149,8 @@ button:not(.auth-form button) {
     background-color: #1a6ea947;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 0 3px #000000;    width: 100%;
+    box-shadow: 0 0 3px #000000;    
+    width: 100%;
     max-width: 150px;
     height: 225px;
     display: flex;
@@ -158,6 +159,11 @@ button:not(.auth-form button) {
     align-items: center;
     cursor: pointer;
     transition: transform 0.2s;
+    word-wrap: break-word; 
+}
+
+.list-card h2 {
+    max-width: 145px;
 }
 
 .list-card:hover {
@@ -287,8 +293,6 @@ footer {
     grid-column: 2 / 3; /* Center the footer */
     text-align: center;
     padding: 10px;
-    background: linear-gradient(to right, #667eea, #764ba2);
-    border-top: 1px solid #DDD;
 }
 
 /* Styles from login.html */
