@@ -36,7 +36,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             cursor: pointer;
             transition: transform 0.2s;
@@ -223,11 +222,12 @@
             const card = document.createElement('div');
             card.className = 'task-card';
             card.setAttribute('data-task-id', task.tasks_id);
+            card.classList.add('accordion');
             card.innerHTML = `
                 <input type="checkbox" ${task.is_done ? 'checked' : ''} class="toggle-checkbox">
                 <h2>${task.title}</h2>
-                <p>${task.description}</p>
-                <button class="edit-btn">Edit</button>
+                <span class="edit">✏️</span>
+                <span class="delete">🗑️</span>
             `;
             card.querySelector('.toggle-checkbox').addEventListener('change', async function () {
                 const taskId = task.tasks_id;
@@ -246,7 +246,7 @@
                     alert(result.error);
                 }
             });
-            card.querySelector('.edit-btn').addEventListener('click', function () {
+            card.querySelector('.edit').addEventListener('click', function () {
 
                 const task_id = task.tasks_id;
 
@@ -277,7 +277,17 @@
                 });
             });
             container.appendChild(card);
+
+            // Add accordion element for dropdown functionality:
+            const panel = document.createElement('div');
+            panel.className = 'panel';
+            panel.style.display = 'none'; // Initially hide the panel
+            panel.setAttribute('data-task-id', task.tasks_id);
+            panel.innerHTML = `<p>${task.description}</p>`;
+            container.appendChild(panel);
         }
+
+        
 
         // Fetch and display existing tasks on page load
         async function fetchTasks() {
@@ -291,6 +301,21 @@
                 result.data.forEach(addTaskCard);
             } else {
                 alert(result.error);
+            }
+
+            var acc = document.getElementsByClassName("accordion");
+
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    console.log('[DEBUG] Accordion clicked');
+                    this.classList.toggle("active");
+                    var panel = document.querySelector('.panel[data-task-id="' + this.getAttribute('data-task-id') + '"]');
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
+                });
             }
         }
 
