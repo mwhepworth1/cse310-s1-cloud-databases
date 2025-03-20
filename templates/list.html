@@ -8,7 +8,7 @@
     <meta name="description" content="A simple to-do list application to manage your tasks.">
     <style>
         .back-button {
-            background-color: #006D77;
+            background-color: #333;
             color: #FFF;
             border: none;
             border-radius: 4px;
@@ -149,11 +149,11 @@
     <div class="search-container">
         <form id="search-form">
             <input type="text" id="search-input" placeholder="Search for a task" required>
-            <button type="submit">Search</button>
+            <button type="submit" style="font-size: 24px;">🔎</button> <!-- Increased font size -->
         </form>
     </div>
     <div class="container">
-        <button onclick="window.history.back()" class="back-button">Back</button>
+        <button onclick="window.history.back()" class="back-button" style="position: fixed; bottom: 53px; left: 132px;">Back</button>
         <input type="hidden" id="list-id" value="{{ list_id }}">
         <input type="hidden" id="user-id" value="{{ user_id }}">
         <div id="todo-tasks" class="list-container">

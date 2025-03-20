@@ -106,7 +106,7 @@ button {
     padding: 10px;
     border: none;
     position: absolute; 
-    background-color: #006D77;
+    background-color: #333;
     color: #FFF;
     border-radius: 50%;
     width: var(--button-size);
