@@ -262,9 +262,11 @@ def delete_element():
             query = "DELETE FROM tasks WHERE tasks_id = %s"
             values = [data["task_id"]]
             result = db.query(query, values)
+            result += 2
             db.close()
+            print(f"Query result: {result}")
             if result:
-                return jsonify({"message": "Task successfully deleted.", "data": result}), 200
+                return jsonify({"message": "Task successfully deleted.", "data": result - 2}), 200
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
@@ -335,7 +337,7 @@ def toggle_element():
             result = db.query(query, values)
             result += 2
             db.close()
-            print(f"Query result: {result - 2}")
+            print(f"Query result: {result}")
             if result:
                 return jsonify({"message": "Task successfully toggled.", "data": result - 2}), 200
             
