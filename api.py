@@ -188,7 +188,7 @@ def create_element():
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try:
-            query = "INSERT INTO tasks1 (list_id, title, description, is_done) VALUES (%s, %s, %s, %s)"
+            query = "INSERT INTO tasks (list_id, title, description, is_done) VALUES (%s, %s, %s, %s)"
             values = [data["list_id"], data["title"], data["description"], False]
             result = db.query(query, values)
             db.close()
@@ -225,7 +225,7 @@ def update_element():
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try:
-            query = "UPDATE tasks1 SET title = %s, description = %s WHERE list_id = %s AND tasks_id = %s"
+            query = "UPDATE tasks SET title = %s, description = %s WHERE list_id = %s AND tasks_id = %s"
             values = [data["title"], data["description"], data["list_id"], data["task_id"]]
             result = db.query(query, values)
             db.close()
@@ -259,7 +259,7 @@ def delete_element():
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try:
-            query = "DELETE FROM tasks1 WHERE tasks_id = %s"
+            query = "DELETE FROM tasks WHERE tasks_id = %s"
             values = [data["task_id"]]
             result = db.query(query, values)
             db.close()
@@ -291,16 +291,16 @@ def get_element():
         list_id = request.args.get('list_id')
         if not user_id or not list_id:
             return jsonify({"error": "Missing required query parameter: user_id, list_id, or element_id"}), 400
-        
+        print(f"User ID: {user_id}, List ID: {list_id}")
         try:
-            query = "SELECT * FROM tasks1 WHERE list_id = %s"
-            values = [list_id]
+            query = "SELECT * FROM tasks WHERE list_id = %s"
+            values = [f'{list_id}']
             result = db.query(query, values)
             db.close()
             if result:
                 return jsonify({"message": "Task successfully retrieved.", "data": result}), 200
             else:
-                return jsonify({"error": "An unexpected error occurred"}), 500
+                return jsonify({"error": "Task did not return data.", "data": 0}), 200
         except Error as e:
             print(f"An unexpected error occurred: '{e}'")
             return jsonify({"error": f"An unexpected error occurred: '{e}'"}), 500
@@ -330,7 +330,7 @@ def toggle_element():
         
         try: 
             # SET is_done = NOT is_done is the same as "is_done = not is_done" or "is_done = !is_done".
-            query = "UPDATE tasks1 SET is_done = NOT is_done WHERE list_id = %s AND tasks_id = %s"
+            query = "UPDATE tasks SET is_done = NOT is_done WHERE list_id = %s AND tasks_id = %s"
             values = [data["list_id"], data["task_id"]]
             result = db.query(query, values)
             db.close()

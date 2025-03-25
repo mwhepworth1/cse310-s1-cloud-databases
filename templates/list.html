@@ -39,10 +39,35 @@
             align-items: center;
             cursor: pointer;
             transition: transform 0.2s;
+            position: relative;
         }
 
         .task-card:hover {
             transform: scale(1.05);
+        }
+
+        .task-card .edit,
+        .task-card .delete {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            padding: 5px;
+        }
+
+        .task-card .edit {
+            right: 40px;
+        }
+
+        .task-card textarea {
+            width: 100%;
+            min-height: 100px;
+            margin-top: 10px;
+        }
+
+        .task-card input[type="text"] {
+            width: calc(100% - 80px);
+            margin-right: 80px;
+            padding: 5px;
         }
 
         .add-card {
@@ -73,6 +98,29 @@
 
         .add-card button:hover {
             background-color: #83C5BE;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .search-container form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-container button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: -40px;
         }
 
         @media (max-width: 1024px) {
@@ -149,7 +197,7 @@
     <div class="search-container">
         <form id="search-form">
             <input type="text" id="search-input" placeholder="Search for a task" required>
-            <button type="submit" style="font-size: 24px;">🔎</button> <!-- Increased font size -->
+            <button type="submit">🔎</button>
         </form>
     </div>
     <div class="container">
@@ -229,7 +277,10 @@
                 <span class="edit">✏️</span>
                 <span class="delete">🗑️</span>
             `;
-            card.querySelector('.toggle-checkbox').addEventListener('change', async function () {
+
+            // Toggle checkbox handler
+            card.querySelector('.toggle-checkbox').addEventListener('change', async function (e) {
+                e.stopPropagation(); // Prevent accordion trigger
                 const taskId = task.tasks_id;
                 const listId = document.getElementById('list-id').value;
                 const userId = document.getElementById('user-id').value;
@@ -246,48 +297,134 @@
                     alert(result.error);
                 }
             });
-            card.querySelector('.edit').addEventListener('click', function () {
 
-                const task_id = task.tasks_id;
-
-                document.querySelector('.task-card[data-task-id="' + task_id + '"] h2').innerText = prompt("Edit Task Title", task.title);
-                document.querySelector('.task-card[data-task-id="' + task_id + '"] p').innerText = prompt("Edit Task Description", task.description);
+            // Edit handler
+            card.querySelector('.edit').addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent accordion trigger
+                const taskId = task.tasks_id;
+                const panel = document.querySelector('.panel[data-task-id="' + taskId + '"]');
+                const titleElement = document.querySelector('.task-card[data-task-id="' + taskId + '"] h2');
+                const descriptionElement = panel.querySelector('p');
                 
-                // After prompting the user for their new input, lets update the task in the database
-                const listId = document.getElementById('list-id').value;
-                const userId = document.getElementById('user-id').value;
-                const data = {
-                    list_id: listId,
-                    task_id: task_id,
-                    title: document.querySelector('.task-card[data-task-id="' + task_id + '"] h2').innerText,
-                    description: document.querySelector('.task-card[data-task-id="' + task_id + '"] p').innerText
+                // Show accordion panel
+                panel.style.display = 'block';
+                card.classList.add('active');
+
+                // Convert title to input
+                const titleInput = document.createElement('input');
+                titleInput.type = 'text';
+                titleInput.value = titleElement.textContent;
+                titleElement.replaceWith(titleInput);
+
+                // Convert description to textarea
+                const descriptionInput = document.createElement('textarea');
+                descriptionInput.value = descriptionElement.textContent;
+                descriptionElement.replaceWith(descriptionInput);
+
+                function saveChanges() {
+                    const newTitle = titleInput.value;
+                    const newDescription = descriptionInput.value;
+                    
+                    // Create new elements
+                    const newTitleElement = document.createElement('h2');
+                    newTitleElement.textContent = newTitle;
+                    const newDescriptionElement = document.createElement('p');
+                    newDescriptionElement.textContent = newDescription;
+
+                    // Replace inputs with new elements
+                    titleInput.replaceWith(newTitleElement);
+                    descriptionInput.replaceWith(newDescriptionElement);
+
+                    // Update in database
+                    const listId = document.getElementById('list-id').value;
+                    const data = {
+                        list_id: listId,
+                        task_id: taskId,
+                        title: newTitle,
+                        description: newDescription
+                    };
+                    
+                    fetch('/api/list/tasks/update', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (!response.ok) {
+                            alert(result.error);
+                        }
+                    });
                 }
-                fetch('/api/list/tasks/update', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (!response.ok) {
-                        alert(result.error);
+
+                // Save on enter or blur
+                titleInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveChanges();
                     }
                 });
+                descriptionInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        saveChanges();
+                    }
+                });
+                titleInput.addEventListener('blur', saveChanges);
+                descriptionInput.addEventListener('blur', saveChanges);
             });
+
+            // Delete handler
+            card.querySelector('.delete').addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent accordion trigger
+                if (confirm('Are you sure you want to delete this task?')) {
+                    const taskId = task.tasks_id;
+                    fetch('/api/list/tasks/delete', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ task_id: taskId })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (response.ok) {
+                            // Remove the card and its panel from the DOM
+                            card.remove();
+                            document.querySelector('.panel[data-task-id="' + taskId + '"]').remove();
+                        } else {
+                            alert(result.error);
+                        }
+                    });
+                }
+            });
+
             container.appendChild(card);
 
-            // Add accordion element for dropdown functionality:
+            // Add accordion element for dropdown functionality
             const panel = document.createElement('div');
             panel.className = 'panel';
-            panel.style.display = 'none'; // Initially hide the panel
+            panel.style.display = 'none';
             panel.setAttribute('data-task-id', task.tasks_id);
             panel.innerHTML = `<p>${task.description}</p>`;
             container.appendChild(panel);
         }
 
-        
+        // Accordion click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('accordion') || 
+                (e.target.parentElement && e.target.parentElement.classList.contains('accordion') && 
+                !e.target.classList.contains('edit') && 
+                !e.target.classList.contains('delete') && 
+                !e.target.classList.contains('toggle-checkbox'))) {
+                const card = e.target.closest('.accordion');
+                card.classList.toggle('active');
+                const panel = document.querySelector('.panel[data-task-id="' + card.getAttribute('data-task-id') + '"]');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            }
+        });
 
         // Fetch and display existing tasks on page load
         async function fetchTasks() {
