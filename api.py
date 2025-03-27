@@ -228,9 +228,11 @@ def update_element():
             query = "UPDATE tasks SET title = %s, description = %s WHERE list_id = %s AND tasks_id = %s"
             values = [data["title"], data["description"], data["list_id"], data["task_id"]]
             result = db.query(query, values)
+            result += 2
             db.close()
+            print(f'Query result: {result}')
             if result:
-                return jsonify({"message": "Element successfully updated.", "data": result}), 200
+                return jsonify({"message": "Element successfully updated.", "data": result - 2}), 200
             else:
                 return jsonify({"error": "An unexpected error occurred"}), 500
         except Error as e:
