@@ -113,10 +113,14 @@ def delete_list():
                 return jsonify({"error": f"Missing required key: {key}"}), 400
         
         try:
-            query = "DELETE FROM lists WHERE user_id = %s AND lists_id = %s"
+            delete_task_query = "DELETE FROM tasks WHERE list_id = %s"
+            db.query(delete_task_query, [data["list_id"]])
+
+            delete_list_query = "DELETE FROM lists WHERE user_id = %s AND lists_id = %s"
             values = [data["user_id"], data["list_id"]]
-            result = db.query(query, values)
+            result = db.query(delete_list_query, values)
             db.close()
+            result += 2
             if result:
                 return jsonify({"message": "List successfully deleted.", "data": result}), 200
             else:

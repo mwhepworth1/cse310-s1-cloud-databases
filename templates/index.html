@@ -162,21 +162,53 @@
             });
         });
 
-        function addListCard(list) {
-            const container = document.getElementById('todo-lists');
-            const card = document.createElement('div');
-            card.className = 'list-card';
-            card.setAttribute('data-user-id', list.user_id);
-            card.setAttribute('data-list-id', list.lists_id);
-            card.innerHTML = `
-                <h2>${list.list_name}</h2>
-            `;
-            card.addEventListener('click', function () {
-                window.location.href = `/list/${list.lists_id}`;
-            });
-            container.appendChild(card);
-        }
+        
+    function addListCard(list) {
+        const container = document.getElementById('todo-lists');
+        const card = document.createElement('div');
+        card.className = 'list-card';
+        card.setAttribute('data-user-id', list.user_id);
+        card.setAttribute('data-list-id', list.lists_id);
+        card.innerHTML = `
+            <h2>${list.list_name}</h2>
+            <span class="delete delete-icon">🗑️</span>
+        `;
 
+        // Add click event for navigating to the list
+        card.addEventListener('click', function (e) {
+            // Prevent navigation if the delete button is clicked
+            if (e.target.classList.contains('delete')) return;
+            window.location.href = `/list/${list.lists_id}`;
+        });
+
+        // Add click event for the delete button
+        card.querySelector('.delete').addEventListener('click', async function (e) {
+            e.stopPropagation(); // Prevent triggering the card click event
+            if (confirm('Are you sure you want to delete this list?')) {
+                try {
+                    const response = await fetch('/api/list/delete', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ user_id: list.user_id, list_id: list.lists_id }),
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        card.remove(); // Remove the card from the DOM
+                    } else {
+                        alert(result.error);
+                    }
+                } catch (error) {
+                    console.error('Error deleting list:', error);
+                    alert('An error occurred while deleting the list.');
+                }
+            }
+        });
+
+        container.appendChild(card);
+    }
         // Fetch and display existing lists on page load
         async function fetchLists() {
             const userId = document.getElementById('user-id').value;

@@ -522,3 +522,16 @@ footer {
     color: #333;
 
 }
+.delete-icon {
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-top: auto;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.delete-icon:hover {
+    transform: scale(1.2);
+    color: #E29578;
+}
