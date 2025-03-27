@@ -266,7 +266,7 @@
 
         function addTaskCard(task) {
             const container = document.getElementById('todo-tasks');
-            const card = document.createElement('div');
+            let card = document.createElement('div');
             card.className = 'task-card';
             card.setAttribute('data-task-id', task.tasks_id);
             card.classList.add('accordion');
@@ -387,15 +387,30 @@
                         },
                         body: JSON.stringify({ task_id: taskId })
                     })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (response.ok) {
-                            // Remove the card and its panel from the DOM
-                            card.remove();
-                            document.querySelector('.panel[data-task-id="' + taskId + '"]').remove();
+                    .then(response => {
+                        // Store the response.ok value
+                        const isSuccess = response.ok;
+                        return response.json().then(result => {
+                            return { isSuccess, result };
+                        });
+                    })
+                    .then(({ isSuccess, result }) => {
+                        if (isSuccess) {
+                            // Remove both the card and its associated panel
+                            const cardToRemove = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+                            const panelToRemove = document.querySelector(`.panel[data-task-id="${taskId}"]`);
+                            
+                            console.log('Removing card:', cardToRemove);
+                            console.log('Removing panel:', panelToRemove);
+                            
+                            if (cardToRemove) cardToRemove.remove();
+                            if (panelToRemove) panelToRemove.remove();
                         } else {
                             alert(result.error);
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting task:', error);
                     });
                 }
             });
